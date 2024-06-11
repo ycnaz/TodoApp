@@ -1,5 +1,4 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import LandingPage from '@/views/LandingPage.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -7,13 +6,24 @@ const router = createRouter({
     {
       path: '/',
       name: 'home',
-      component: LandingPage
+      component: () => import('../views/LandingPage.vue'),
     },
     {
       path: '/auth',
-      name: 'auth',
       component: () => import('../views/AuthView.vue'),
-    }
+      children: [
+        {
+          path: '',
+          name: 'login',
+          component: () => import('../components/LoginPage.vue')
+        },
+        {
+          path: 'register',
+          name: 'register',
+          component: () => import('../components/RegisterPage.vue')
+        }
+      ]
+    },
   ]
 })
 
