@@ -8,7 +8,7 @@
     const toast = useToast()
 
     function socialsAlert() {
-        toast.error("Isn't implemented")
+        toast.error("Not implemented")
     }
 </script>
 

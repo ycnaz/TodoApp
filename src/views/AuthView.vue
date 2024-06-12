@@ -24,33 +24,27 @@
         <Blob class="absolute top-16 -left-48 w-[300px] h-[300px] scale-150" />
         <Blob2 class="absolute top-96 -right-48 w-[300px] h-[300px] scale-150" />
         <div class="flex w-[1200px] h-[600px] bg-white rounded-lg shadow-lg z-10">
-            <div class="flex flex-col w-1/2 h-full items-center justify-center">
-                <div class="flex gap-x-5 border border-black py-1 px-1 rounded-full absolute top-32">
+            <div class="flex flex-col w-1/2 h-full items-center justify-center relative">
+                <RouterLink class="absolute top-5 right-5" to="/dashboard">Skip</RouterLink>
+                <div class="flex border border-black rounded-full absolute top-5">
                     <RouterLink
                         exact-active-class="active"
-                        class="py-2 px-5 rounded-full transition-colors duration-300 ease-in-out relative z-10"
+                        class="h-full w-1/2 py-2 px-7 rounded-s-full relative z-10"
                         :to="{ name: 'login' }"
                         >
                         Login
                     </RouterLink>
                     <RouterLink
                         exact-active-class="active"
-                        class="py-2 px-5 rounded-full transition-colors duration-300 ease-in-out relative z-10"
+                        class="h-full w-1/2 py-2 px-7 rounded-e-full relative z-10"
                         :to="{ name: 'register' }"
                         >
                         Register
                     </RouterLink>
                     <div class="absolute bg-indigo-600 h-full w-[50%] top-0 left-0 transition-all duration-300 ease-in-out" :class="[ isRegisterActive ? 'translate-x-full rounded-e-full' : 'rounded-s-full' ]"></div>
                 </div>
-                <!-- RouterView to display login or register components -->
-                <router-view v-slot="{ Component }">
-                    <transition
-                        enter-active-class="transition duration-300 ease-out"
-                        enter-from-class="opacity-0 translate-x-[100px]"
-                        leave-to-class="opacity-0 translate-x-[-100px]"
-                        leave-active-class="transition duration-300 ease-in"
-                        name="slide" mode="out-in"
-                    >
+                <router-view v-slot="{ Component, route }">
+                    <transition :name="route.meta.transition" mode="out-in">
                         <component :is="Component"></component>
                     </transition>
                 </router-view>
@@ -66,4 +60,25 @@
 .active {
     color: white;
 }
+
+.slide-left-enter-active,
+.slide-right-enter-active {
+    @apply transition-all duration-200 ease-out
+}
+
+.slide-left-enter-from,
+.slide-right-leave-to {
+    @apply opacity-0 translate-x-[100px]
+}
+
+.slide-left-leave-to,
+.slide-right-enter-from {
+    @apply opacity-0 translate-x-[-100px]
+}
+
+.slide-left-leave-active,
+.slide-right-leave-active {
+    @apply transition-all duration-200 ease-in
+}
+
 </style>

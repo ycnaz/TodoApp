@@ -15,16 +15,33 @@ const router = createRouter({
         {
           path: '',
           name: 'login',
-          component: () => import('../components/LoginPage.vue')
+          component: () => import('../components/LoginPage.vue'),
+          meta: { transition: 'slide-right'},
         },
         {
           path: 'register',
           name: 'register',
-          component: () => import('../components/RegisterPage.vue')
+          component: () => import('../components/RegisterPage.vue'),
+          meta: { transition: 'slide-left'},
         }
       ]
     },
+    {
+      path: '/dashboard',
+      name: 'dashboard',
+      components: {
+        default: () => import('../components/TodoComp.vue'),
+        leftSideBar: () => import('../components/LeftBar.vue'),
+        rightSideBar: () => import('../components/RightBar.vue'),
+      },
+    },
   ]
+})
+
+router.afterEach((to, from) => {
+  const toDepth = to.path.split('/').filter(segment => segment).length
+  const fromDepth = from.path.split('/').filter(segment => segment).length
+  to.meta.transition = toDepth < fromDepth ? 'slide-right' : 'slide-left'
 })
 
 export default router
