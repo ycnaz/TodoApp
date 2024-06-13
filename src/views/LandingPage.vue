@@ -20,7 +20,7 @@ toast
                     <h1 class="text-6xl bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 bg-clip-text text-transparent mb-5">To-do List App</h1>
                     <span class="mr-auto text-2xl">An app to manage your to-do's</span>
                     <span class="mr-auto text-2xl mb-10">Login to get started</span>
-                    <RouterLink to="/auth" class="text-indigo-700 text-2xl border border-indigo-700 py-3 px-32 rounded hover:bg-indigo-700 hover:text-white mr-auto transition-all duration-300">Start</RouterLink>
+                    <RouterLink to="/auth" class="text-indigo-700 text-2xl border border-indigo-700 py-3 px-32 rounded hover:bg-indigo-700 hover:text-white mr-auto transition-all duration-300">Start &rarr;</RouterLink>
                 </div>
                 <Welcome class="scale-75" />
             </div>

@@ -4,8 +4,9 @@
 
 <template>
     <div>
-        <RouterView name="leftSideBar"/>
-        <RouterView name="default"/>
-        <RouterView name="rightSideBar"/>
+        <router-view name="leftSideBar" />
+        <router-view name="mainTodo" />
+        <router-view name="rightSideBar" />
+        <router-view />
     </div>
 </template>
