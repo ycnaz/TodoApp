@@ -1,12 +1,15 @@
 <script setup>
-    import { RouterView } from 'vue-router';
+import { defineAsyncComponent } from 'vue';
+
+const rightSideBar = defineAsyncComponent(() => import('../components/RightBar.vue'))
+const leftSideBar = defineAsyncComponent(() => import('../components/LeftBar.vue'))
+const todoComp = defineAsyncComponent(() => import('../components/TodoComp.vue'))
 </script>
 
 <template>
-    <div>
-        <router-view name="leftSideBar" />
-        <router-view name="mainTodo" />
-        <router-view name="rightSideBar" />
-        <router-view />
+    <div class="w-full h-full flex">
+        <leftSideBar/>
+        <todoComp />
+        <rightSideBar />
     </div>
 </template>

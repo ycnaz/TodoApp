@@ -28,12 +28,8 @@ const router = createRouter({
     },
     {
       path: '/dashboard',
-      components: {
-        default: () => import('../views/DashView.vue'),
-        leftSideBar: () => import('../components/LeftBar.vue'),
-        mainTodo: () => import('../components/TodoComp.vue'),
-        rightSideBar: () => import('../components/RightBar.vue'),
-      },
+      name: 'dashboard',
+      component: () => import('../views/DashView.vue'),
     },
   ]
 })
