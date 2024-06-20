@@ -1,19 +1,26 @@
 <script setup>
-import { defineAsyncComponent, computed } from 'vue';
+import { defineAsyncComponent, computed, ref } from 'vue';
 import { RouterLink } from 'vue-router';
 import { useLeftSidebarStore } from '@/stores/useLeftSideBar';
+import { useListStore } from '@/stores/useLists';
+import shortid from 'shortid';
+// #84cc16
 
 const HamBurger = defineAsyncComponent(() => import('../assets/svg/hamburger.svg'));
 const SearchComp = defineAsyncComponent(() => import('../assets/svg/search.svg'));
 const ForwardComp = defineAsyncComponent(() => import('../assets/svg/forward.svg'));
 const ListComp = defineAsyncComponent(() => import('../assets/svg/list.svg'));
-const CalendarComp = defineAsyncComponent(() => import('../assets/svg/calendar.svg'));
 const PlusComp = defineAsyncComponent(() => import('../assets/svg/plus.svg'));
 const SignOut = defineAsyncComponent(() => import('../assets/svg/sign-out.svg'));
 import { useComponentStore } from '../stores/useCompStore';
 
+const listsStore = useListStore()
 const componentStore = useComponentStore();
 const leftSideBarStore = useLeftSidebarStore();
+
+const lists = listsStore.lists
+
+const addingNewList = ref(false)
 
 const leftSidebarClass = computed(() =>
   leftSideBarStore.isSidebarOpen ? 'ml-0 w-96' : '-ml-96 w-96'
@@ -25,6 +32,19 @@ function toggleSideBar() {
 
 function navigate(comp) {
     componentStore.setComponent(comp);
+}
+
+const listName = ref('')
+const listColor = ref('')
+
+function addNewList() {
+    if (listName.value.trim()) {
+        listsStore.addList({
+            id: shortid.generate(),
+            name: listName.value,
+            color: listColor.value,
+        })
+    }
 }
 </script>
 
@@ -50,30 +70,25 @@ function navigate(comp) {
                 <ForwardComp class="h-6 w-6" />
                 <span>Upcoming</span>
             </button>
-            <button @click="navigate('calendar')" class="flex items-center gap-x-3">
-                <CalendarComp class="h-6 w-6" />
-                <span>Calendar</span>
-            </button>
         </div>
 
         <div class="flex flex-col gap-y-3 mt-10">
             <h1>Lists</h1>
-            <div class="flex gap-x-3">
-                <div class="h-6 w-6 bg-red-500 rounded"></div>
-                <span>Personal</span>
+            <div v-for="list in lists" :key="list.id" class="flex gap-x-3">
+                <div class="h-6 w-6 rounded" :style="{ backgroundColor: list.color }"></div>
+                <span>{{ list.name }}</span>
             </div>
-            <div class="flex gap-x-3">
-                <div class="h-6 w-6 bg-yellow-500 rounded"></div>
-                <span>Work</span>
-            </div>
-            <div class="flex gap-x-3">
-                <div class="h-6 w-6 bg-blue-500 rounded"></div>
-                <span>List 1</span>
-            </div>
-            <div class="flex gap-x-3">
-                <PlusComp class="h-6 w-6"/>
-                <span>Add new list</span>
-            </div>
+            <Transition name="fade" mode="out-in">
+                <div v-if="!addingNewList" class="flex gap-x-3">
+                    <PlusComp class="h-6 w-6"/>
+                    <button @click="addingNewList = !addingNewList">Add new list</button>
+                </div>
+                <div v-else class="flex gap-x-3">
+                    <input type="color" v-model="listColor">
+                    <input type="text" placeholder="New list" class="bg-indigo-200" v-model="listName">
+                    <button class="py-2 px-5 bg-indigo-700 rounded text-white hover:bg-indigo-600 focus:bg-indigo-600 active:bg-indigo-500">Add</button>
+                </div>
+            </Transition>
         </div>
 
         <div class="flex gap-x-3 mt-auto">
@@ -86,5 +101,15 @@ function navigate(comp) {
 <style scoped>
 .sidebar-transition {
     transition: margin-left 0.3s ease-in-out;
+}
+
+.fade-enter-active,
+.fade-leave-active {
+    @apply transition-all ease-linear
+}
+
+.fade-enter-from,
+.fade-leave-to {
+    @apply opacity-0
 }
 </style>

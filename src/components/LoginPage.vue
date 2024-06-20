@@ -24,7 +24,7 @@
                 <label class="mr-auto absolute peer-placeholder-shown:text-gray-400 peer-placeholder-shown:text-2xl peer-placeholder-shown:top-3 peer-placeholder-shown:left-3 peer-focus:text-xl peer-focus:text-black peer-focus:-top-7 peer-focus:left-0 transition-all" for="password">Password</label>
             </div>
 
-            <button class="bg-indigo-700 text-white w-full h-10 rounded hover:bg-indigo-500 active:bg-indigo-600 transition-all focus:outline-none focus:bg-indigo-500">Login</button>
+            <button class="bg-indigo-700 text-white w-full h-10 rounded hover:bg-indigo-500 active:bg-indigo-600 focus:outline-none focus:bg-indigo-500 transition-all">Login</button>
             <span>Don't have an account? Register</span>
             <div class="flex w-full items-center">
                 <div class="w-full h-px border border-slate-300"></div>
