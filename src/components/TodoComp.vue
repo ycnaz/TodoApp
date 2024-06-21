@@ -1,11 +1,13 @@
 <script setup>
-    import { computed, defineAsyncComponent, watchEffect, ref } from 'vue';
+    import { computed, defineAsyncComponent, watchEffect, watch, ref } from 'vue';
     import { useComponentStore } from '../stores/useCompStore';
     import today from '../components/TodayComp.vue'
     import upcoming from '../components/UpcomingComp.vue'
     import { useLeftSidebarStore } from '@/stores/useLeftSideBar';
     import { useTodosStore } from '@/stores/useTodos';
     import shortid from 'shortid';
+    import { useRightBar } from '@/stores/useRightBar';
+    import { useTodoTextStore } from '@/stores/useTodoText';
     const HamBurger = defineAsyncComponent(() => import('../assets/svg/hamburger.svg'))
 
     const todosStore = useTodosStore() 
@@ -31,7 +33,13 @@
         leftSideBar.toggleSideBar();
     }
 
-    const newTodoText = ref('')
+    const todoTextStore = useTodoTextStore()
+    const newTodoText = computed(() => todoTextStore.text)
+
+    // watch(newTodoText, () => {
+    //     console.log('changed1')
+    //     todoTextStore.updateText(newTodoText)
+    // })
 
     function addNewTodo() {
         if (newTodoText.value.trim()) {
@@ -43,16 +51,23 @@
             newTodoText.value = ''
         }
     }
+
+    const rightBarStore = useRightBar()
+
+    function openRightBar() {
+        rightBarStore.openRightBar()
+    }
+
 </script>
 
 <template>
     <div class="p-3 flex grow">
         <div v-if="!showHamBurger">
-            <HamBurger @click="toggleLeftSideBar()" class="h-16 w-16 cursor-pointer"/>
+            <HamBurger @click="toggleLeftSideBar" class="h-16 w-16 cursor-pointer"/>
         </div>
         <component :is="currentComponent">
-            <form @submit.prevent="addNewTodo()" class="flex flex-col items-start justify-center w-full">
-                <input v-model="newTodoText" class="bg-indigo-100 border border-gray-300 outline-none h-12 w-full text-2xl px-3 rounded-lg" placeholder="Add a to-do">
+            <form @submit.prevent="addNewTodo" class="flex flex-col items-start justify-center w-full">
+                <input @click="openRightBar" :value="newTodoText" class="bg-indigo-100 border border-gray-300 outline-none h-12 w-full text-2xl px-3 rounded-lg" placeholder="Add a to-do">
             </form>
         </component>
     </div>

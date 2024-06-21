@@ -1,10 +1,10 @@
 <script setup>
 import { useTodosStore } from '@/stores/useTodos';
+import { computed } from 'vue';
 
 const todosStore = useTodosStore()
 
-const todos = todosStore.todos
-console.log(todos)
+const todos = computed(() => todosStore.todos)
 </script>
 
 <template>

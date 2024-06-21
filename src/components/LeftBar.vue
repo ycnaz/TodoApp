@@ -12,18 +12,19 @@ const ForwardComp = defineAsyncComponent(() => import('../assets/svg/forward.svg
 const ListComp = defineAsyncComponent(() => import('../assets/svg/list.svg'));
 const PlusComp = defineAsyncComponent(() => import('../assets/svg/plus.svg'));
 const SignOut = defineAsyncComponent(() => import('../assets/svg/sign-out.svg'));
+const CrossComp = defineAsyncComponent(() => import('../assets/svg/cross.svg'));
 import { useComponentStore } from '../stores/useCompStore';
 
 const listsStore = useListStore()
 const componentStore = useComponentStore();
 const leftSideBarStore = useLeftSidebarStore();
 
-const lists = listsStore.lists
+const lists = computed(() => listsStore.lists)
 
 const addingNewList = ref(false)
 
 const leftSidebarClass = computed(() =>
-  leftSideBarStore.isSidebarOpen ? 'ml-0 w-96' : '-ml-96 w-96'
+  leftSideBarStore.isSidebarOpen ? 'ml-0' : '-ml-96'
 );
 
 function toggleSideBar() {
@@ -35,7 +36,7 @@ function navigate(comp) {
 }
 
 const listName = ref('')
-const listColor = ref('')
+const listColor = ref('#4338ca')
 
 function addNewList() {
     if (listName.value.trim()) {
@@ -44,12 +45,16 @@ function addNewList() {
             name: listName.value,
             color: listColor.value,
         })
+        listName.value = ''
+        listColor.value = '#4338ca'
+        addingNewList.value = false
     }
+
 }
 </script>
 
 <template>
-    <div :class="[leftSidebarClass, 'bg-indigo-200 h-full px-5 pb-5 flex flex-col sidebar-transition']">
+    <div :class="[leftSidebarClass, 'bg-indigo-200 h-full px-5 pb-5 flex flex-col w-96 sidebar-transition']">
         <div class="flex justify-between items-center h-16">
             <h1 class="text-3xl">Menu</h1>
             <HamBurger @click="toggleSideBar()" class="h-12 w-12 cursor-pointer hover:scale-105 transition-all" />
@@ -83,10 +88,11 @@ function addNewList() {
                     <PlusComp class="h-6 w-6"/>
                     <button @click="addingNewList = !addingNewList">Add new list</button>
                 </div>
-                <div v-else class="flex gap-x-3">
-                    <input type="color" v-model="listColor">
-                    <input type="text" placeholder="New list" class="bg-indigo-200" v-model="listName">
-                    <button class="py-2 px-5 bg-indigo-700 rounded text-white hover:bg-indigo-600 focus:bg-indigo-600 active:bg-indigo-500">Add</button>
+                <div v-else class="flex gap-x-3 items-center">
+                    <input type="color" v-model="listColor" class="appearance-none border-none h-6 w-6 scale-150 rounded bg-transparent cursor-pointer">
+                    <input type="text" placeholder="New list" class="bg-indigo-200 border border-gray-400 rounded-lg px-2 w-24 flex flex-1 outline-none h-full" v-model="listName">
+                    <CrossComp @click="addingNewList = false, listName = '', listColor = '#4338ca'" class="h-4 w-4 cursor-pointer rounded-full scale-150 bg-gray-400"/>
+                    <button @click="addNewList()" class="py-2 px-5 bg-indigo-700 rounded text-white hover:bg-indigo-600 focus:bg-indigo-600 active:bg-indigo-500">Add</button>
                 </div>
             </Transition>
         </div>
