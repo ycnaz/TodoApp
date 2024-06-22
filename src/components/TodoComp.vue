@@ -1,22 +1,17 @@
 <script setup>
-    import { computed, defineAsyncComponent, watchEffect, watch, ref } from 'vue';
-    import { useComponentStore } from '../stores/useCompStore';
-    import today from '../components/TodayComp.vue'
-    import upcoming from '../components/UpcomingComp.vue'
+    import { computed, defineAsyncComponent, watchEffect, ref } from 'vue';
     import { useLeftSidebarStore } from '@/stores/useLeftSideBar';
     import { useTodosStore } from '@/stores/useTodos';
-    import shortid from 'shortid';
     import { useRightBar } from '@/stores/useRightBar';
-    import { useTodoTextStore } from '@/stores/useTodoText';
+    import { useListStore } from '@/stores/useLists';
+    const CrossComp = defineAsyncComponent(() => import('../assets/svg/cross-w.svg'))
     const HamBurger = defineAsyncComponent(() => import('../assets/svg/hamburger.svg'))
 
-    const todosStore = useTodosStore() 
+    const todosStore = useTodosStore()
+    const todos = computed(() => todosStore.todos)
 
-    const components = { today, upcoming }
     const leftSideBar = useLeftSidebarStore();
     const leftSideBarStatus = computed(() => leftSideBar.isSidebarOpen)
-    const compStore = useComponentStore();
-    const currentComponent = computed(() => components[compStore.currentComponent]);
     
     const showHamBurger = ref(leftSideBarStatus.value)
     watchEffect(() => {
@@ -33,42 +28,57 @@
         leftSideBar.toggleSideBar();
     }
 
-    const todoTextStore = useTodoTextStore()
-    const newTodoText = computed(() => todoTextStore.text)
-
-    // watch(newTodoText, () => {
-    //     console.log('changed1')
-    //     todoTextStore.updateText(newTodoText)
-    // })
-
-    function addNewTodo() {
-        if (newTodoText.value.trim()) {
-            todosStore.addTodo({
-                id: shortid.generate(),
-                text: newTodoText.value,
-                completed: false
-            })
-            newTodoText.value = ''
-        }
-    }
-
     const rightBarStore = useRightBar()
 
     function openRightBar() {
         rightBarStore.openRightBar()
     }
 
+    const listsStore = useListStore()
+    const lists = computed(() => listsStore.lists)
+
+    function getTodoColor(todo) {
+        return lists.value.find(list => list.name === todo.list).color
+    }
+
+    function removeTodo(id) {
+        todosStore.removeTodo(id)
+    }
+
 </script>
 
 <template>
-    <div class="p-3 flex grow">
-        <div v-if="!showHamBurger">
+    <div class="p-3 flex grow justify-center">
+        <div v-if="!showHamBurger" class="absolute top-2 left-2">
             <HamBurger @click="toggleLeftSideBar" class="h-16 w-16 cursor-pointer"/>
         </div>
-        <component :is="currentComponent">
-            <form @submit.prevent="addNewTodo" class="flex flex-col items-start justify-center w-full">
-                <input @click="openRightBar" :value="newTodoText" class="bg-indigo-100 border border-gray-300 outline-none h-12 w-full text-2xl px-3 rounded-lg" placeholder="Add a to-do">
-            </form>
-        </component>
+        <div class="flex flex-col gap-y-5">
+            <button @click="openRightBar" class="w-96 h-10 bg-indigo-700 rounded-lg shadow-md text-white hover:bg-indigo-500 focus:bg-indigo-500 active:bg-indigo-600 transition-all">New to-do</button>
+            <TransitionGroup tag="ul" name="fade" class="flex flex-col gap-y-1 relative list-none">
+                <li v-for="todo in todos" :key="todo.id" :style="{ backgroundColor: getTodoColor(todo) }" class="flex items-center w-96 py-3 px-5 rounded-lg shadow-sm">
+                    <input type="checkbox" v-model="todo.completed" class="cursor-pointer w-4 h-4 border-none text-indigo-600 transition-all">
+                    <span class="text-white pl-5">{{ todo.text }}</span>
+                    <CrossComp @click="removeTodo(todo.id)" class="h-5 w-5 ml-auto cursor-pointer rounded-full"/>
+                </li>
+            </TransitionGroup>
+        </div>
     </div>
 </template>
+
+<style scoped>
+.fade-move,
+.fade-enter-active,
+.fade-leave-active {
+  transition: all 0.5s cubic-bezier(0.55, 0, 0.1, 1);
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+  transform: scaleY(0.01) translate(30px, 0);
+}
+
+.fade-leave-active {
+  position: absolute;
+}
+</style>

@@ -4,7 +4,6 @@ import { RouterLink } from 'vue-router';
 import { useLeftSidebarStore } from '@/stores/useLeftSideBar';
 import { useListStore } from '@/stores/useLists';
 import shortid from 'shortid';
-// #84cc16
 
 const HamBurger = defineAsyncComponent(() => import('../assets/svg/hamburger.svg'));
 const SearchComp = defineAsyncComponent(() => import('../assets/svg/search.svg'));
@@ -13,10 +12,8 @@ const ListComp = defineAsyncComponent(() => import('../assets/svg/list.svg'));
 const PlusComp = defineAsyncComponent(() => import('../assets/svg/plus.svg'));
 const SignOut = defineAsyncComponent(() => import('../assets/svg/sign-out.svg'));
 const CrossComp = defineAsyncComponent(() => import('../assets/svg/cross.svg'));
-import { useComponentStore } from '../stores/useCompStore';
 
 const listsStore = useListStore()
-const componentStore = useComponentStore();
 const leftSideBarStore = useLeftSidebarStore();
 
 const lists = computed(() => listsStore.lists)
@@ -29,10 +26,6 @@ const leftSidebarClass = computed(() =>
 
 function toggleSideBar() {
     leftSideBarStore.toggleSideBar()
-}
-
-function navigate(comp) {
-    componentStore.setComponent(comp);
 }
 
 const listName = ref('')
@@ -51,6 +44,10 @@ function addNewList() {
     }
 
 }
+
+function removeTheList(id){
+    listsStore.removeList(id)
+}
 </script>
 
 <template>
@@ -62,16 +59,16 @@ function addNewList() {
 
         <form class="flex border border-gray-400 items-center rounded-lg">
             <SearchComp class="h-8 w-8" />
-            <input type="search" class="bg-indigo-200 h-10 grow rounded-e-lg outline-none text-xl">
+            <input type="search" class="bg-indigo-200 h-10 grow rounded-e-lg outline-none text-xl border-none focus:ring-indigo-500 focus:border-indigo500">
         </form>
 
         <div class="flex flex-col gap-y-3 mt-10">
             <h1>Tasks</h1>
-            <button @click="navigate('today')" class="flex items-center gap-x-3">
+            <button class="flex items-center gap-x-3">
                 <ListComp class="h-6 w-6" />
                 <span>Today</span>
             </button>
-            <button @click="navigate('upcoming')" class="flex items-center gap-x-3">
+            <button class="flex items-center gap-x-3">
                 <ForwardComp class="h-6 w-6" />
                 <span>Upcoming</span>
             </button>
@@ -79,10 +76,13 @@ function addNewList() {
 
         <div class="flex flex-col gap-y-3 mt-10">
             <h1>Lists</h1>
-            <div v-for="list in lists" :key="list.id" class="flex gap-x-3">
-                <div class="h-6 w-6 rounded" :style="{ backgroundColor: list.color }"></div>
-                <span>{{ list.name }}</span>
-            </div>
+            <TransitionGroup tag="ul" name="fade2" class="space-y-3 relative list-none">
+                <li v-for="list in lists" :key="list.id" class="flex gap-x-3 group">
+                    <div class="h-6 w-6 rounded" :style="{ backgroundColor: list.color }"></div>
+                    <span>{{ list.name }}</span>
+                    <CrossComp @click="removeTheList(list.id)" class="hidden group-hover:block h-6 w-6 ml-auto cursor-pointer" />
+                </li>
+            </TransitionGroup>
             <Transition name="fade" mode="out-in">
                 <div v-if="!addingNewList" class="flex gap-x-3">
                     <PlusComp class="h-6 w-6"/>
@@ -117,5 +117,21 @@ function addNewList() {
 .fade-enter-from,
 .fade-leave-to {
     @apply opacity-0
+}
+
+.fade2-move,
+.fade2-enter-active,
+.fade2-leave-active {
+  transition: all 0.5s cubic-bezier(0.55, 0, 0.1, 1);
+}
+
+.fade2-enter-from,
+.fade2-leave-to {
+  opacity: 0;
+  transform: scaleY(0.01) translate(30px, 0);
+}
+
+.fade2-leave-active {
+  position: absolute;
 }
 </style>
