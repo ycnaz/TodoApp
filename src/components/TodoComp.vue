@@ -45,6 +45,10 @@
         todosStore.removeTodo(id)
     }
 
+    function toggleTodo(id) {
+        todosStore.toggleTodo(id)
+    }
+
 </script>
 
 <template>
@@ -55,11 +59,13 @@
         <div class="flex flex-col gap-y-5">
             <button @click="openRightBar" class="w-96 h-10 bg-indigo-700 rounded-lg shadow-md text-white hover:bg-indigo-500 focus:bg-indigo-500 active:bg-indigo-600 transition-all">New to-do</button>
             <TransitionGroup tag="ul" name="fade" class="flex flex-col gap-y-1 relative list-none">
+                <span v-if="todosStore.loading">Checking for to-do's...</span>
                 <li v-for="todo in todos" :key="todo.id" :style="{ backgroundColor: getTodoColor(todo) }" class="flex items-center w-96 py-3 px-5 rounded-lg shadow-sm">
-                    <input type="checkbox" v-model="todo.completed" class="cursor-pointer w-4 h-4 border-none text-indigo-600 transition-all">
+                    <input @change="toggleTodo(todo.id)" type="checkbox" :checked="todo.completed" class="cursor-pointer w-4 h-4 border-none text-indigo-600 transition-all">
                     <span class="text-white pl-5">{{ todo.text }}</span>
                     <CrossComp @click="removeTodo(todo.id)" class="h-5 w-5 ml-auto cursor-pointer rounded-full"/>
                 </li>
+                <h1 v-if="!todosStore.loading && todos.length === 0">You have no to-do's</h1>
             </TransitionGroup>
         </div>
     </div>

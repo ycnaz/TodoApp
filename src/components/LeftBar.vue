@@ -12,6 +12,8 @@ const ListComp = defineAsyncComponent(() => import('../assets/svg/list.svg'));
 const PlusComp = defineAsyncComponent(() => import('../assets/svg/plus.svg'));
 const SignOut = defineAsyncComponent(() => import('../assets/svg/sign-out.svg'));
 const CrossComp = defineAsyncComponent(() => import('../assets/svg/cross.svg'));
+const FireComp = defineAsyncComponent(() => import('../assets/svg/fire.svg'))
+const CheckComp = defineAsyncComponent(() => import('../assets/svg/check.svg'))
 
 const listsStore = useListStore()
 const leftSideBarStore = useLeftSidebarStore();
@@ -63,14 +65,22 @@ function removeTheList(id){
         </form>
 
         <div class="flex flex-col gap-y-3 mt-10">
-            <h1>Tasks</h1>
+            <h1>To-do's</h1>
             <button class="flex items-center gap-x-3">
                 <ListComp class="h-6 w-6" />
+                <span>All</span>
+            </button>
+            <button class="flex items-center gap-x-3">
+                <FireComp class="h-5 w-5" />
                 <span>Today</span>
             </button>
             <button class="flex items-center gap-x-3">
                 <ForwardComp class="h-6 w-6" />
                 <span>Upcoming</span>
+            </button>
+            <button class="flex items-center gap-x-3">
+                <CheckComp class="h-6 w-6" />
+                <span>Completed</span>
             </button>
         </div>
 
