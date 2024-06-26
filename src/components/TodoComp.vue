@@ -8,10 +8,14 @@
     const HamBurger = defineAsyncComponent(() => import('../assets/svg/hamburger.svg'))
 
     const todosStore = useTodosStore()
-    const todos = computed(() => todosStore.todos)
+    const todos = computed(() => todosStore.filteredTodos)
 
     const leftSideBar = useLeftSidebarStore();
     const leftSideBarStatus = computed(() => leftSideBar.isSidebarOpen)
+
+    const capFilter = computed(() => {
+        return todosStore.filter.charAt(0).toUpperCase() + todosStore.filter.slice(1)
+    })
     
     const showHamBurger = ref(leftSideBarStatus.value)
     watchEffect(() => {
@@ -30,8 +34,8 @@
 
     const rightBarStore = useRightBar()
 
-    function openRightBar() {
-        rightBarStore.openRightBar()
+    function toggleRightBar() {
+        rightBarStore.toggleRightBar()
     }
 
     const listsStore = useListStore()
@@ -57,15 +61,19 @@
             <HamBurger @click="toggleLeftSideBar" class="h-16 w-16 cursor-pointer"/>
         </div>
         <div class="flex flex-col gap-y-5">
-            <button @click="openRightBar" class="w-96 h-10 bg-indigo-700 rounded-lg shadow-md text-white hover:bg-indigo-500 focus:bg-indigo-500 active:bg-indigo-600 transition-all">New to-do</button>
+            <button @click="toggleRightBar" class="w-96 h-10 bg-indigo-700 rounded-lg shadow-md text-white hover:bg-indigo-500 focus:bg-indigo-500 active:bg-indigo-600 transition-all">New to-do</button>
             <TransitionGroup tag="ul" name="fade" class="flex flex-col gap-y-1 relative list-none">
                 <span v-if="todosStore.loading">Checking for to-do's...</span>
-                <li v-for="todo in todos" :key="todo.id" :style="{ backgroundColor: getTodoColor(todo) }" class="flex items-center w-96 py-3 px-5 rounded-lg shadow-sm">
-                    <input @change="toggleTodo(todo.id)" type="checkbox" :checked="todo.completed" class="cursor-pointer w-4 h-4 border-none text-indigo-600 transition-all">
-                    <span class="text-white pl-5">{{ todo.text }}</span>
-                    <CrossComp @click="removeTodo(todo.id)" class="h-5 w-5 ml-auto cursor-pointer rounded-full"/>
+                <span class="text-4xl mb-5" v-else>{{ todosStore.listFilter ? todosStore.listFilter : capFilter }}</span>
+                <li v-for="todo in todos" :key="todo.id" :style="{ backgroundColor: getTodoColor(todo) }" class="group flex flex-col w-96 py-3 px-5 rounded-lg shadow-sm transition-all">
+                    <div class="flex items-center">
+                        <input @change="toggleTodo(todo.id)" type="checkbox" :checked="todo.completed" class="cursor-pointer w-4 h-4 border-none text-indigo-600 transition-all">
+                        <span class="text-white pl-5">{{ todo.text }}</span>
+                        <CrossComp @click="removeTodo(todo.id)" class="opacity-0 h-5 w-5 ml-auto cursor-pointer rounded-full group-hover:opacity-100 transition-all duration-300"/>
+                    </div>
+                    <p :class="{ 'group-hover:mt-3': todo.desc }" class="text-gray-200 max-h-0 opacity-0 group-hover:opacity-100 group-hover:max-h-96 transition-all">{{ todo.desc }}</p>
                 </li>
-                <h1 v-if="!todosStore.loading && todos.length === 0">You have no to-do's</h1>
+                <h1 v-if="!todosStore.loading && !todos">You have no to-do's</h1>
             </TransitionGroup>
         </div>
     </div>

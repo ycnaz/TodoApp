@@ -3,6 +3,7 @@ import { defineAsyncComponent, computed, ref } from 'vue';
 import { RouterLink } from 'vue-router';
 import { useLeftSidebarStore } from '@/stores/useLeftSideBar';
 import { useListStore } from '@/stores/useLists';
+import { useTodosStore } from '@/stores/useTodos';
 import shortid from 'shortid';
 
 const HamBurger = defineAsyncComponent(() => import('../assets/svg/hamburger.svg'));
@@ -17,6 +18,8 @@ const CheckComp = defineAsyncComponent(() => import('../assets/svg/check.svg'))
 
 const listsStore = useListStore()
 const leftSideBarStore = useLeftSidebarStore();
+
+const todosStore = useTodosStore()
 
 const lists = computed(() => listsStore.lists)
 
@@ -66,19 +69,19 @@ function removeTheList(id){
 
         <div class="flex flex-col gap-y-3 mt-10">
             <h1>To-do's</h1>
-            <button class="flex items-center gap-x-3">
+            <button @click="todosStore.changeFilter('all')" class="flex items-center gap-x-3 transition-all" :class="{active: todosStore.filter === 'all' && !todosStore.listFilter}">
                 <ListComp class="h-6 w-6" />
                 <span>All</span>
             </button>
-            <button class="flex items-center gap-x-3">
+            <button @click="todosStore.changeFilter('today')" class="flex items-center gap-x-3 transition-all" :class="{active: todosStore.filter === 'today' && !todosStore.listFilter}">
                 <FireComp class="h-5 w-5" />
                 <span>Today</span>
             </button>
-            <button class="flex items-center gap-x-3">
+            <button @click="todosStore.changeFilter('upcoming')" class="flex items-center gap-x-3 transition-all" :class="{active: todosStore.filter === 'upcoming' && !todosStore.listFilter}">
                 <ForwardComp class="h-6 w-6" />
                 <span>Upcoming</span>
             </button>
-            <button class="flex items-center gap-x-3">
+            <button @click="todosStore.changeFilter('completed')" class="flex items-center gap-x-3 transition-all" :class="{active: todosStore.filter === 'completed' && !todosStore.listFilter}">
                 <CheckComp class="h-6 w-6" />
                 <span>Completed</span>
             </button>
@@ -87,10 +90,10 @@ function removeTheList(id){
         <div class="flex flex-col gap-y-3 mt-10">
             <h1>Lists</h1>
             <TransitionGroup tag="ul" name="fade2" class="space-y-3 relative list-none">
-                <li v-for="list in lists" :key="list.id" class="flex gap-x-3 group">
+                <li @click="todosStore.changeListFilter(list.name)" v-for="list in lists" :key="list.id" class="flex gap-x-3 w-full group cursor-pointer" :class="{activeList: todosStore.listFilter === list.name}">
                     <div class="h-6 w-6 rounded" :style="{ backgroundColor: list.color }"></div>
                     <span>{{ list.name }}</span>
-                    <CrossComp @click="removeTheList(list.id)" class="hidden group-hover:block h-6 w-6 ml-auto cursor-pointer" />
+                    <CrossComp @click.stop="removeTheList(list.id)" class="opacity-0 group-hover:opacity-100 h-6 w-6 ml-auto cursor-pointer transition-all" />
                 </li>
             </TransitionGroup>
             <Transition name="fade" mode="out-in">
@@ -115,6 +118,14 @@ function removeTheList(id){
 </template>
 
 <style scoped>
+.active {
+    @apply border-b-2 border-indigo-600
+}
+
+.activeList {
+    @apply text-indigo-600
+}
+
 .sidebar-transition {
     transition: margin-left 0.3s ease-in-out;
 }

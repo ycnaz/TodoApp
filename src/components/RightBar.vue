@@ -12,6 +12,7 @@ const toast = useToast()
 const newTodoText = ref('')
 const newTodosList = ref('Personal')
 const newTodosDate = ref('')
+const newTodoDesc = ref('')
 
 const rightBarStore = useRightBar()
 const rightSideBarClass = computed(() => 
@@ -29,10 +30,12 @@ function addNewTodo(){
             list: newTodosList.value,
             date: newTodosDate.value,
             completed: false,
+            desc: newTodoDesc.value.trim(),
         })
         newTodoText.value = ''
         newTodosList.value = 'Personal'
         newTodosDate.value = ''
+        newTodoDesc.value = ''
     } else {
         toast.error('Please write your to-do')
     }
@@ -45,7 +48,7 @@ function addNewTodo(){
             <h1 class="text-4xl">To-do:</h1>
             <input v-model="newTodoText" class="bg-indigo-200 w-full border border-gray-400 h-12 rounded-lg px-3 outline-none text-2xl focus:ring-indigo-500 focus:border-indigo500" placeholder="To-do">
     
-            <textarea placeholder="Description" class="outline-none bg-indigo-200 border border-gray-400 resize-none rounded-lg w-full h-32 p-3 focus:ring-indigo-500 focus:border-indigo500"></textarea>
+            <textarea v-model="newTodoDesc" placeholder="Description" class="outline-none bg-indigo-200 border border-gray-400 resize-y min-h-14 max-h-[480px] rounded-lg w-full h-32 p-3 focus:ring-indigo-500 focus:border-indigo500"></textarea>
     
             <div class="flex gap-x-5 items-center">
                 <label for="list" class="w-24">List</label>

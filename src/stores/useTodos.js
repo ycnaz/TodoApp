@@ -7,13 +7,16 @@ export const useTodosStore = defineStore('todosStore', () => {
     const todos = ref([])
     const loading = ref(false)
     const error = ref(null)
+    const filter = ref('all')
+    const listFilter = ref('')
+    const STORAGE_KEY = 'ycnaz-todos'
 
     // Actions
     const fetchTodos = async () => {
         loading.value = true
         try {
             await new Promise(resolve => setTimeout(resolve, 2000))
-            const data = JSON.parse(localStorage.getItem('ycnaz_todos')) || []
+            const data = JSON.parse(localStorage.getItem(STORAGE_KEY)) || []
             todos.value = data
             error.value = null
         } catch (err) {
@@ -25,8 +28,24 @@ export const useTodosStore = defineStore('todosStore', () => {
 
     fetchTodos()
 
+    const changeFilter = (newFilter) => {
+        listFilter.value = ''
+        filter.value = newFilter
+    }
+
+    const changeListFilter = (newListFilter) => {
+        listFilter.value = newListFilter
+    }
+
+    const filters = {
+        'all': () => todos.value,
+        'today': () => todosBasedOnDate('today'),
+        'upcoming': () => todosBasedOnDate('upcoming'),
+        'completed': () => completedTodos(),
+    }
+
     const saveTodosToLocalStorage = () => {
-        localStorage.setItem('ycnaz_todos', JSON.stringify(todos.value))
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(todos.value))
     }
 
     const addTodo = (todo) => {
@@ -55,11 +74,30 @@ export const useTodosStore = defineStore('todosStore', () => {
         }
     }
 
-    // Getters
-    const completedTodos = computed(() => todos.value.filter(todo => todo.completed === true))
-    const todosInList = (list) => {
-        return computed(() => todos.value.filter(todo => todo.list === list))
+    const removeTodoWhenListDeleted = (list) => {
+        todos.value = todos.value.filter(todo => todo.list !== list.name)
+        saveTodosToLocalStorage()
     }
+
+    const completedTodos = () => {
+        return todos.value.filter(todo => todo.completed)
+    }
+
+    const todosInList = (list) => {
+        return todos.value.filter(todo => todo.list === list)
+    }
+
+    //Getters
+    const filteredTodos = computed(() => {
+        let result = filters[filter.value] ? filters[filter.value]() : [];
+
+        if (listFilter.value) {
+            result = todos.value.filter(todo => todo.list === listFilter.value);
+        }
+
+        return result
+    });
+
 
     const todosBasedOnDate = (date) => {
         const today = new Date().setHours(0, 0, 0, 0)
@@ -75,11 +113,18 @@ export const useTodosStore = defineStore('todosStore', () => {
 
     return {
         todos,
+        filteredTodos,
         loading,
+        filter,
         error,
         fetchTodos,
+        filters,
+        listFilter,
         saveTodosToLocalStorage,
         updateTodo,
+        changeFilter,
+        changeListFilter,
+        removeTodoWhenListDeleted,
         addTodo,
         removeTodo,
         toggleTodo,
