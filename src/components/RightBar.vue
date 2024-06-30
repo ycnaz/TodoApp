@@ -9,10 +9,20 @@ import shortid from 'shortid';
 const todosStore = useTodosStore()
 const toast = useToast()
 
+const model = defineModel()
+
 const newTodoText = ref('')
+
+if (model.value) {
+    newTodoText.value = model.value
+    rightBarStore.openRightBar()
+}
+
 const newTodosList = ref('Personal')
-const newTodosDate = ref('')
+const newTodosDate = ref(getCurrentDate())
 const newTodoDesc = ref('')
+
+const todoMinDate = ref(getCurrentDate())
 
 const rightBarStore = useRightBar()
 const rightSideBarClass = computed(() => 
@@ -34,11 +44,19 @@ function addNewTodo(){
         })
         newTodoText.value = ''
         newTodosList.value = 'Personal'
-        newTodosDate.value = ''
+        newTodosDate.value = getCurrentDate()
         newTodoDesc.value = ''
     } else {
         toast.error('Please write your to-do')
     }
+}
+
+function getCurrentDate() {
+  const today = new Date();
+  const year = today.getFullYear();
+  const month = String(today.getMonth() + 1).padStart(2, '0');
+  const day = String(today.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
 }
 </script>
 
@@ -59,7 +77,7 @@ function addNewTodo(){
 
             <div class="flex gap-x-5 items-center">
                 <label for="date" class="w-24">Due date</label>
-                <input v-model="newTodosDate" id="date" name="date" type="date" class="bg-indigo-200 border border-gray-400 rounded focus:outline-none focus:bg-indigo-300 py-1 focus:ring-indigo-500 focus:border-indigo500 transition-all">
+                <input v-model="newTodosDate" :min="todoMinDate" id="date" name="date" type="date" class="bg-indigo-200 border border-gray-400 rounded focus:outline-none focus:bg-indigo-300 py-1 focus:ring-indigo-500 focus:border-indigo500 transition-all">
             </div>
     
             <button type="submit" class="mt-auto border border-gray-400 rounded-lg min-w-fit w-full bg-indigo-700 text-white py-4 px-7 hover:bg-indigo-500 focus:bg-indigo-600 active:bg-indigo-600 focus:outline-none transition-all">Add To-do</button>

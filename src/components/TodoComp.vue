@@ -53,6 +53,21 @@
         todosStore.toggleTodo(id)
     }
 
+    function isBeforeToday(date) {
+        const today = new Date();
+        const givenDate = new Date(date);
+        return givenDate < today.setHours(0, 0, 0, 0);
+    }
+
+    function getTodoStyle(todo) {
+        const color = getTodoColor(todo);
+        const opacity = isBeforeToday(todo.date) ? '0.75' : '1';
+        return {
+            backgroundColor: color,
+            opacity: opacity
+        };
+    }
+
 </script>
 
 <template>
@@ -65,9 +80,9 @@
             <TransitionGroup tag="ul" name="fade" class="flex flex-col gap-y-1 relative list-none">
                 <span v-if="todosStore.loading">Checking for to-do's...</span>
                 <span class="text-4xl mb-5" v-else>{{ todosStore.listFilter ? todosStore.listFilter : capFilter }}</span>
-                <li v-for="todo in todos" :key="todo.id" :style="{ backgroundColor: getTodoColor(todo) }" class="group flex flex-col w-96 py-3 px-5 rounded-lg shadow-sm transition-all">
+                <li v-for="todo in todos" :key="todo.id" @click="$emit('editTodo', todo.text)" :style="getTodoStyle(todo)" class="group flex flex-col w-96 py-3 px-5 rounded-lg shadow-lg transition-all cursor-pointer">
                     <div class="flex items-center">
-                        <input @change="toggleTodo(todo.id)" type="checkbox" :checked="todo.completed" class="cursor-pointer w-4 h-4 border-none text-indigo-600 transition-all">
+                        <input :disabled="isBeforeToday(todo.date)" @change="toggleTodo(todo.id)" type="checkbox" :checked="todo.completed" class="cursor-pointer w-4 h-4 border-none text-indigo-600 transition-all">
                         <span class="text-white pl-5">{{ todo.text }}</span>
                         <CrossComp @click="removeTodo(todo.id)" class="opacity-0 h-5 w-5 ml-auto cursor-pointer rounded-full group-hover:opacity-100 transition-all duration-300"/>
                     </div>

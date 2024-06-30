@@ -42,6 +42,7 @@ export const useTodosStore = defineStore('todosStore', () => {
         'today': () => todosBasedOnDate('today'),
         'upcoming': () => todosBasedOnDate('upcoming'),
         'completed': () => completedTodos(),
+        'expired': () => todosBasedOnDate('expired'),
     }
 
     const saveTodosToLocalStorage = () => {
@@ -105,8 +106,10 @@ export const useTodosStore = defineStore('todosStore', () => {
             const dueDate = new Date(todo.date).setHours(0, 0, 0, 0)
             if (date === 'today') {
                 return dueDate === today
-            } else {
+            } else if (date === 'upcoming') {
                 return dueDate > today
+            } else {
+                return dueDate < today
             }
         })
     }

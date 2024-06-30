@@ -15,6 +15,7 @@ const SignOut = defineAsyncComponent(() => import('../assets/svg/sign-out.svg'))
 const CrossComp = defineAsyncComponent(() => import('../assets/svg/cross.svg'));
 const FireComp = defineAsyncComponent(() => import('../assets/svg/fire.svg'))
 const CheckComp = defineAsyncComponent(() => import('../assets/svg/check.svg'))
+const TimeCross = defineAsyncComponent(() => import('../assets/svg/time-cross.svg'))
 
 const listsStore = useListStore()
 const leftSideBarStore = useLeftSidebarStore();
@@ -84,6 +85,10 @@ function removeTheList(id){
             <button @click="todosStore.changeFilter('completed')" class="flex items-center gap-x-3 transition-all" :class="{active: todosStore.filter === 'completed' && !todosStore.listFilter}">
                 <CheckComp class="h-6 w-6" />
                 <span>Completed</span>
+            </button>
+            <button @click="todosStore.changeFilter('expired')" class="flex items-center gap-x-3 transition-all" :class="{active: todosStore.filter === 'expired' && !todosStore.listFilter}">
+                <TimeCross class="h-5 w-6" />
+                <span>Expired</span>
             </button>
         </div>
 
