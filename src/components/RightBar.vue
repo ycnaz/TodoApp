@@ -1,7 +1,7 @@
 <script setup>
 import { useListStore } from '@/stores/useLists'
 import { useRightBar } from '@/stores/useRightBar';
-import { computed, ref } from 'vue';
+import { computed, ref, watch } from 'vue';
 import { useTodosStore } from '@/stores/useTodos';
 import { useToast } from 'vue-toastification';
 import shortid from 'shortid';
@@ -12,12 +12,6 @@ const toast = useToast()
 const model = defineModel()
 
 const newTodoText = ref('')
-
-if (model.value) {
-    newTodoText.value = model.value
-    rightBarStore.openRightBar()
-}
-
 const newTodosList = ref('Personal')
 const newTodosDate = ref(getCurrentDate())
 const newTodoDesc = ref('')
@@ -25,6 +19,13 @@ const newTodoDesc = ref('')
 const todoMinDate = ref(getCurrentDate())
 
 const rightBarStore = useRightBar()
+watch(model, () => {
+    newTodoText.value = model.value.text
+    newTodosList.value = model.value.list
+    newTodosDate.value = model.value.date
+    newTodoDesc.value = model.value.desc
+    rightBarStore.openRightBar() 
+})
 const rightSideBarClass = computed(() => 
     rightBarStore.rightBarOpen ? 'mr-0' : '-mr-96'
 )

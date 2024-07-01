@@ -80,7 +80,7 @@
             <TransitionGroup tag="ul" name="fade" class="flex flex-col gap-y-1 relative list-none">
                 <span v-if="todosStore.loading">Checking for to-do's...</span>
                 <span class="text-4xl mb-5" v-else>{{ todosStore.listFilter ? todosStore.listFilter : capFilter }}</span>
-                <li v-for="todo in todos" :key="todo.id" @click="$emit('editTodo', todo.text)" :style="getTodoStyle(todo)" class="group flex flex-col w-96 py-3 px-5 rounded-lg shadow-lg transition-all cursor-pointer">
+                <li v-for="todo in todos" :key="todo.id" @click="$emit('editTodo', todo)" :style="getTodoStyle(todo)" class="group flex flex-col w-96 py-3 px-5 rounded-lg shadow-lg transition-all cursor-pointer">
                     <div class="flex items-center">
                         <input :disabled="isBeforeToday(todo.date)" @change="toggleTodo(todo.id)" type="checkbox" :checked="todo.completed" class="cursor-pointer w-4 h-4 border-none text-indigo-600 transition-all">
                         <span class="text-white pl-5">{{ todo.text }}</span>
