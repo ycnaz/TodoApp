@@ -3,6 +3,7 @@ import { ref } from "vue";
 
 export const useRightBar = defineStore('rightBarStore', () => {
     const rightBarOpen = ref(false)
+    const editing = ref(false)
 
     function toggleRightBar() {
         rightBarOpen.value = !rightBarOpen.value
@@ -16,5 +17,5 @@ export const useRightBar = defineStore('rightBarStore', () => {
         rightBarOpen.value = false
     }
 
-    return { rightBarOpen, toggleRightBar, openRightBar, closeRightBar }
+    return { rightBarOpen, editing, toggleRightBar, openRightBar, closeRightBar }
 })
