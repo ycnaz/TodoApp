@@ -3,11 +3,13 @@
 </script>
 
 <template>
-  <router-view v-slot="{ Component, route }">
-    <Transition :name="route.meta.transition" mode="out-in">
-      <component :is="Component"></component>
-    </Transition>
-  </router-view>
+  <div class="w-full h-full overflow-x-hidden">
+    <router-view v-slot="{ Component, route }">
+      <Transition :name="route.meta.transition" mode="out-in">
+        <component :is="Component"></component>
+      </Transition>
+    </router-view>
+  </div>
 </template>
 
 <style scoped>

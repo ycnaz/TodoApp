@@ -83,10 +83,10 @@
 
 <template>
     <div class="p-3 flex grow justify-center">
-        <div v-if="!showHamBurger" class="fixed top-2 left-2">
+        <div v-if="!showHamBurger" class="flex-none mr-auto">
             <HamBurger @click="toggleLeftSideBar" class="h-16 w-16 cursor-pointer"/>
         </div>
-        <div class="flex flex-col gap-y-5">
+        <div class="flex flex-col flex-grow items-center gap-y-5">
             <button @click="toggleRightBar" class="w-96 h-10 bg-indigo-700 rounded-lg shadow-md text-white hover:bg-indigo-500 focus:bg-indigo-500 active:bg-indigo-600 transition-all">New to-do</button>
             <TransitionGroup tag="ul" name="fade" class="flex flex-col gap-y-1 relative list-none">
                 <span v-if="todosStore.loading">Checking for to-do's...</span>

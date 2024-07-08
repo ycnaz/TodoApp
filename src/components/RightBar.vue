@@ -1,7 +1,7 @@
 <script setup>
 import { useListStore } from '@/stores/useLists'
 import { useRightBar } from '@/stores/useRightBar';
-import { computed, ref, watch } from 'vue';
+import { computed, ref, watch, onMounted } from 'vue';
 import { useTodosStore } from '@/stores/useTodos';
 import { useToast } from 'vue-toastification';
 import shortid from 'shortid';
@@ -10,6 +10,8 @@ const todosStore = useTodosStore()
 const toast = useToast()
 
 const model = defineModel()
+
+const isSmallScreen = ref(false)
 
 const newTodoText = ref('')
 const newTodosList = ref('Personal')
@@ -21,6 +23,7 @@ const todoMinDate = ref(getCurrentDate())
 
 const rightBarStore = useRightBar()
 const editMode = computed(() => rightBarStore.editing)
+
 watch(model, () => {
     rightBarStore.editing = true
     newTodoText.value = model.value.text
@@ -30,9 +33,25 @@ watch(model, () => {
     editTodoId.value = model.value.id
     rightBarStore.openRightBar() 
 })
-const rightSideBarClass = computed(() => 
-    rightBarStore.rightBarOpen ? 'mr-0' : '-mr-96'
-)
+
+const hide = () => {
+    if (rightBarStore.rightBarOpen === false) {
+        setTimeout(() => {
+            return 'hidden'
+        }, 300)
+    } else {
+        return 'block'
+    }
+}
+
+
+const rightSideBarClass = computed(() => {
+    if (isSmallScreen.value === true) {
+        return rightBarStore.rightBarOpen ? 'right-0' : '-right-96'
+    } else {
+        return rightBarStore.rightBarOpen ? 'mr-0' : '-mr-96'
+    }
+})
 
 const listsStore = useListStore()
 const lists = computed(() => listsStore.lists)
@@ -87,10 +106,19 @@ watch(() => rightBarStore.editing, (newValue) => {
         newTodosList.value = 'Personal';
     }
 });
+
+const updateScreenSize = () => {
+    isSmallScreen.value = window.matchMedia('(max-width:1280px)').matches
+}
+
+onMounted(() => {
+    updateScreenSize()
+    window.addEventListener('resize', updateScreenSize)
+})
 </script>
 
 <template>
-    <div :class="[rightSideBarClass, 'h-full bg-indigo-200 w-96 ml-auto p-3 transition-all duration-300 ease-in-out dark:bg-indigo-800 dark:text-white']">
+    <div :class="[rightSideBarClass, hide, 'h-full bg-indigo-200 w-96 ml-auto p-3 dark:bg-indigo-800 dark:text-white max-xl:absolute max-xl:bg-red-600 transition-all duration-300 ease-in-out']">
         <form @submit.prevent="addNewTodo" class="h-full flex flex-col gap-y-5">
             <h1 class="text-4xl">To-do:</h1>
             <input v-model="newTodoText" class="bg-indigo-200 w-full border border-gray-400 h-12 rounded-lg px-3 outline-none text-2xl focus:ring-indigo-500 focus:border-indigo500 dark:bg-indigo-500 dark:placeholder-gray-400 dark:border-none dark:ring-white transition-all" placeholder="To-do">
