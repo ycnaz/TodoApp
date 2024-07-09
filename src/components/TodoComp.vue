@@ -1,5 +1,5 @@
 <script setup>
-    import { computed, defineAsyncComponent, watchEffect, ref } from 'vue';
+    import { computed, defineAsyncComponent, watchEffect, ref, onMounted, onUnmounted } from 'vue';
     import { useLeftSidebarStore } from '@/stores/useLeftSideBar';
     import { useTodosStore } from '@/stores/useTodos';
     import { useRightBar } from '@/stores/useRightBar';
@@ -37,7 +37,6 @@
 
     const rightBarStore = useRightBar()
     const rightBarStatus = computed(() => rightBarStore.rightBarOpen)
-    watchEffect(() => console.log(rightBarStatus.value))
 
     const editMode = computed(() => rightBarStore.editing)
 
@@ -79,28 +78,54 @@
         };
     }
 
+    const isSmallScreen = ref(window.innerWidth < 1280)
+
+    function updateScreenSize() {
+        isSmallScreen.value = window.innerWidth < 1280
+    }
+
+    const darken = computed(() => {
+        if ((leftSideBarStatus.value || rightBarStatus.value) && isSmallScreen.value) {
+            return 'block'
+        } else {
+            return 'hidden'
+        }
+    })
+
+    onMounted(() => {
+        updateScreenSize()
+        window.addEventListener('resize', updateScreenSize)
+    })
+
+    onUnmounted(() => window.removeEventListener('resize', updateScreenSize))
 </script>
 
 <template>
-    <div class="p-3 flex grow justify-center">
-        <div v-if="!showHamBurger" class="flex-none mr-auto">
-            <HamBurger @click="toggleLeftSideBar" class="h-16 w-16 cursor-pointer"/>
-        </div>
-        <div class="flex flex-col flex-grow items-center gap-y-5">
-            <button @click="toggleRightBar" class="w-96 h-10 bg-indigo-700 rounded-lg shadow-md text-white hover:bg-indigo-500 focus:bg-indigo-500 active:bg-indigo-600 transition-all">New to-do</button>
-            <TransitionGroup tag="ul" name="fade" class="flex flex-col gap-y-1 relative list-none">
-                <span v-if="todosStore.loading">Checking for to-do's...</span>
-                <span class="text-4xl mb-5 dark:text-white" v-else>{{ todosStore.listFilter ? todosStore.listFilter : capFilter }}</span>
-                <li v-for="todo in todos" :key="todo.id" @click="$emit('editTodo', todo)" :style="getTodoStyle(todo)" class="group flex flex-col w-96 py-3 px-5 rounded-lg shadow-lg transition-all cursor-pointer">
-                    <div class="flex items-center">
-                        <input :disabled="isBeforeToday(todo.date)" @click.stop="toggleTodo(todo.id)" type="checkbox" :checked="todo.completed" class="cursor-pointer w-4 h-4 border-none text-indigo-600 transition-all">
-                        <span class="text-white pl-5">{{ todo.text }}</span>
-                        <CrossComp @click.stop="removeTodo(todo.id)" class="opacity-0 h-5 w-5 ml-auto cursor-pointer rounded-full group-hover:opacity-100 transition-all duration-300"/>
+    <div class="flex grow">
+        <div :class="[darken ,'fixed w-full h-full bg-black opacity-80 z-20']"></div>
+        <div class="p-3 flex grow justify-center">
+            
+            <div class="flex flex-col flex-grow items-center gap-y-5">
+                <TransitionGroup tag="div" name="fade" class="flex max-w-96 w-full">
+                    <div v-if="!showHamBurger" key="hamburger" class="flex-none mr-auto">
+                        <HamBurger @click="toggleLeftSideBar" class="h-16 w-16 cursor-pointer"/>
                     </div>
-                    <p :class="{ 'group-hover:mt-3': todo.desc }" class="text-gray-200 max-h-0 opacity-0 group-hover:opacity-100 group-hover:max-h-96 group-focus:opacity-100 group-focus:max-h-96 transition-all">{{ todo.desc }}</p>
-                </li>
-                <h1 v-if="!todosStore.loading && !todos">You have no to-do's</h1>
-            </TransitionGroup>
+                    <button @click="toggleRightBar" key="newTodo" class="max-w-96 w-full h-14 mt-1 bg-indigo-700 rounded-lg shadow-md text-white text-3xl hover:bg-indigo-500 focus:bg-indigo-500 active:bg-indigo-600 transition-all">+</button>
+                </TransitionGroup>
+                <TransitionGroup tag="ul" name="fade" class="flex flex-col gap-y-1 relative list-none w-96 max-sm:max-w-96">
+                    <span v-if="todosStore.loading">Checking for to-do's...</span>
+                    <span class="text-4xl mb-5 dark:text-white" v-else>{{ todosStore.listFilter ? todosStore.listFilter : capFilter }}</span>
+                    <li v-for="todo in todos" :key="todo.id" @click="$emit('editTodo', todo)" :style="getTodoStyle(todo)" class="group flex flex-col w-96 max-sm:max-w-96 py-3 px-5 rounded-lg shadow-lg transition-all cursor-pointer">
+                        <div class="flex items-center">
+                            <input :disabled="isBeforeToday(todo.date)" @click.stop="toggleTodo(todo.id)" type="checkbox" :checked="todo.completed" class="cursor-pointer w-4 h-4 border-none text-indigo-600 transition-all">
+                            <span class="text-white pl-5">{{ todo.text }}</span>
+                            <CrossComp @click.stop="removeTodo(todo.id)" class="opacity-0 h-5 w-5 ml-auto cursor-pointer rounded-full group-hover:opacity-100 transition-all duration-300"/>
+                        </div>
+                        <p :class="{ 'group-hover:mt-3': todo.desc }" class="text-gray-200 max-h-0 opacity-0 group-hover:opacity-100 group-hover:max-h-96 group-focus:opacity-100 group-focus:max-h-96 transition-all">{{ todo.desc }}</p>
+                    </li>
+                    <h1 v-if="!todosStore.loading && !todos">You have no to-do's</h1>
+                </TransitionGroup>
+            </div>
         </div>
     </div>
 </template>

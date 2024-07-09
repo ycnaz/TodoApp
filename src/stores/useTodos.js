@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import { ref, computed } from "vue";
+import { ref, computed, watchEffect } from "vue";
 
 export const useTodosStore = defineStore('todosStore', () => {
 
@@ -9,6 +9,7 @@ export const useTodosStore = defineStore('todosStore', () => {
     const error = ref(null)
     const filter = ref('all')
     const listFilter = ref('')
+    const query = ref('')
     const STORAGE_KEY = 'ycnaz-todos'
 
     // Actions
@@ -95,6 +96,9 @@ export const useTodosStore = defineStore('todosStore', () => {
         if (listFilter.value) {
             result = todos.value.filter(todo => todo.list === listFilter.value);
         }
+        if (query.value) {
+            result = todos.value.filter(todo => todo.text.toLowerCase().includes(query.value))
+        }
 
         return result
     });
@@ -121,6 +125,7 @@ export const useTodosStore = defineStore('todosStore', () => {
         filter,
         error,
         fetchTodos,
+        query,
         filters,
         listFilter,
         saveTodosToLocalStorage,

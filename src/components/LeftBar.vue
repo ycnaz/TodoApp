@@ -15,18 +15,20 @@ const ListComp = defineAsyncComponent(() => import('../assets/svg/list.svg'));
 const PlusComp = defineAsyncComponent(() => import('../assets/svg/plus.svg'));
 const SignOut = defineAsyncComponent(() => import('../assets/svg/sign-out.svg'));
 const CrossComp = defineAsyncComponent(() => import('../assets/svg/cross.svg'));
-const FireComp = defineAsyncComponent(() => import('../assets/svg/fire.svg'))
-const CheckComp = defineAsyncComponent(() => import('../assets/svg/check.svg'))
-const TimeCross = defineAsyncComponent(() => import('../assets/svg/time-cross.svg'))
+const FireComp = defineAsyncComponent(() => import('../assets/svg/fire.svg'));
+const CheckComp = defineAsyncComponent(() => import('../assets/svg/check.svg'));
+const TimeCross = defineAsyncComponent(() => import('../assets/svg/time-cross.svg'));
 
 const listsStore = useListStore()
-const leftSideBarStore = useLeftSidebarStore();
+const leftSideBarStore = useLeftSidebarStore()
 
 const todosStore = useTodosStore()
 
 const lists = computed(() => listsStore.lists)
 
 const addingNewList = ref(false)
+
+const searchQuery = ref('')
 
 const isDark = useDark()
 
@@ -65,15 +67,15 @@ function removeTheList(id){
 </script>
 
 <template>
-    <div :class="[leftSidebarClass, 'bg-indigo-200 h-full px-5 pb-5 flex flex-col w-96 sidebar-transition dark:bg-indigo-800 dark:text-white max-xl:absolute max-xl:z-10']">
+    <div :class="[leftSidebarClass, 'bg-indigo-200 h-full px-5 pb-5 flex flex-col w-96 sidebar-transition dark:bg-indigo-800 dark:text-white max-xl:absolute z-30']">
         <div class="flex justify-between items-center h-16">
             <h1 class="text-3xl">Menu</h1>
             <HamBurger @click="toggleSideBar()" class="h-12 w-12 cursor-pointer hover:scale-105 transition-all" />
         </div>
 
-        <form class="flex border border-gray-400 items-center rounded-lg dark:border-white">
+        <form @submit.prevent class="flex border border-gray-400 items-center rounded-lg dark:border-white">
             <SearchComp class="h-8 w-8" />
-            <input type="search" class="bg-indigo-200 h-10 grow rounded-e-lg outline-none text-xl border-none focus:ring-indigo-500 focus:border-indigo500 dark:bg-indigo-500 dark:placeholder-gray-400 dark:border-none dark:ring-white transition-all">
+            <input v-model="searchQuery" @keyup="todosStore.query = searchQuery" type="search" class="bg-indigo-200 h-10 grow rounded-e-lg outline-none text-xl border-none focus:ring-indigo-500 focus:border-indigo500 dark:bg-indigo-500 dark:placeholder-gray-400 dark:border-none dark:ring-white transition-all">
         </form>
 
         <div class="flex flex-col gap-y-3 mt-10">

@@ -21,7 +21,7 @@ const todo = ref('')
                 <SunComp class="h-6 w-6" v-else/>
             </div>
         </leftSideBar>
-        <todoComp @edit-todo="(t) => todo = t" />
+        <todoComp @edit-todo="(t) => todo = t"/>
         <rightSideBar v-model="todo" />
     </div>
 </template>
