@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import { ref, computed, watchEffect } from "vue";
+import { ref, computed } from "vue";
 
 export const useTodosStore = defineStore('todosStore', () => {
 
@@ -97,7 +97,7 @@ export const useTodosStore = defineStore('todosStore', () => {
             result = todos.value.filter(todo => todo.list === listFilter.value);
         }
         if (query.value) {
-            result = todos.value.filter(todo => todo.text.toLowerCase().includes(query.value))
+            result = todos.value.filter(todo => todo.text.toLowerCase().includes(query.value.toLowerCase()))
         }
 
         return result
