@@ -1,5 +1,18 @@
-# TodoApp
+My To-do list app that I made with **Vue** and **Tailwind** for portfolio.
 
-This is my to-do app. I made this to practice with Vue and Tailwind after reading their documents.
+# What I used:
+- Vue Router
+- Pinia
+- Vue Toastification
+- Vite Svg Loader
+- Tailwind Forms
+- Vue use
+- Short id
 
-This app shows part of my knowledge about Vue, Vue Router, Pinia, Tailwind and ...
+# Abilities showcased in the project:
+- Working with Local Storage
+- Making the app dynamic
+- Working with Pinia and Vue Router
+- Animations
+
+This app stores the to-do's and the to-do list's in your local storage.

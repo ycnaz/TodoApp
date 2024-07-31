@@ -5,11 +5,6 @@ export default {
   content: [
     "index.html",
     "./src/**/*.{vue,js,ts,jsx,tsx}",
-    "./public/**/*.html",
-    "./src/components/**/*.vue",
-    "./src/components/*.vue",
-    "./src/views/**/*.vue",
-    "./src/views/*.vue",
   ],
   theme: {
     extend: {
