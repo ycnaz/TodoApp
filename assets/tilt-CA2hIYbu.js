@@ -1,0 +1,1 @@
+import{o as e,c as t,a as o}from"./index-HTM9DAes.js";const s={xmlns:"http://www.w3.org/2000/svg","data-name":"Layer 1",preserveAspectRatio:"none",viewBox:"0 0 1200 120"},a=o("path",{fill:"#4338CA",d:"M1200 120 0 16.48V0h1200z",class:"shape-fill"},null,-1),n=[a];function c(r,l){return e(),t("svg",s,[...n])}const d={render:c};export{d as default,c as render};
