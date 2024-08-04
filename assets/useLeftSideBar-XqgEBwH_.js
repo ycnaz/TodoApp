@@ -1,0 +1,1 @@
+import{W as o,r as i}from"./index-BPQVF5Ic.js";const u=o("leftSidebarStore",()=>{const e=i(!0);function r(){e.value=!e.value}function t(){e.value=!1}function a(){e.value=!0}return{isSidebarOpen:e,toggleSideBar:r,closeSideBar:t,openSideBar:a}});export{u};
