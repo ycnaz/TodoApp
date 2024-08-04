@@ -20,11 +20,11 @@
 </script>
 
 <template>
-    <div class="flex items-center justify-center h-full">
+    <div class="flex items-center justify-center h-full relative">
         <Blob class="absolute top-16 -left-48 w-[300px] h-[300px] scale-150" />
         <Blob2 class="absolute top-96 -right-48 w-[300px] h-[300px] scale-150" />
-        <div class="flex w-[1200px] h-[600px] bg-white rounded-lg shadow-lg z-10">
-            <div class="flex flex-col w-1/2 h-full items-center justify-center relative">
+        <div class="flex w-[1200px] h-[600px] bg-white rounded-lg shadow-lg z-10 max-xl:w-[600px] max-sm:w-fit">
+            <div class="flex flex-col w-1/2 h-full items-center justify-center relative max-xl:w-full max-sm:px-5">
                 <RouterLink class="absolute top-5 right-5" to="/dashboard">Skip</RouterLink>
                 <div class="flex border border-black rounded-full absolute top-5">
                     <RouterLink
@@ -49,8 +49,8 @@
                     </transition>
                 </router-view>
             </div>
-            <div class="w-1/2 bg-indigo-700 flex items-center justify-center flex-col rounded-lg">
-                <Svg class="scale-[.65]"/>
+            <div class="w-1/2 bg-indigo-700 flex items-center justify-center flex-col rounded-lg max-xl:hidden">
+                <Svg class="scale-[.65]" />
             </div>
         </div>
     </div>

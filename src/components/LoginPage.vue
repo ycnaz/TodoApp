@@ -5,22 +5,22 @@
     const toast = useToast()
 
     function login() {
-        toast.success('Not implemented')
+        toast.error('Not implemented')
     }
 </script>
 
 <template>
     <div>
         <form class="flex flex-col items-center gap-y-3" @submit.prevent="login">
-            <h1 class="font-comfortaa mr-auto text-4xl mb-7">Welcome back!</h1>
+            <h1 class="font-comfortaa mr-auto text-4xl mb-7 max-[440px]:text-3xl">Welcome back!</h1>
 
             <div class="relative flex flex-col mb-7">
-                <input id="username" name="username" autocomplete="off" placeholder="Username" class="peer bg-indigo-200 h-14 w-96 rounded px-3 autofill:bg-indigo-200 outline-0 text-2xl placeholder-transparent shadow-md border-none" type="text">
+                <input id="username" name="username" autocomplete="off" placeholder="Username" class="peer bg-indigo-200 h-14 w-96 rounded px-3 autofill:bg-indigo-200 outline-0 text-2xl placeholder-transparent shadow-md border-none max-[440px]:w-80" type="text">
                 <label class="mr-auto absolute peer-placeholder-shown:text-2xl peer-placeholder-shown:text-gray-400 peer-placeholder-shown:top-3 peer-placeholder-shown:left-3 peer-focus:text-xl peer-focus:-top-7 peer-focus:text-black peer-focus:left-0 transition-all" for="username">Username</label>
             </div>
                 
             <div class="relative flex flex-col">
-                <input id="password" name="password" placeholder="Password" class="peer bg-indigo-200 h-14 w-96 rounded px-3 outline-0 text-2xl placeholder-transparent shadow-md border-none" type="password">
+                <input id="password" name="password" placeholder="Password" class="peer bg-indigo-200 h-14 w-96 rounded px-3 outline-0 text-2xl placeholder-transparent shadow-md border-none max-[440px]:w-80" type="password">
                 <label class="mr-auto absolute peer-placeholder-shown:text-gray-400 peer-placeholder-shown:text-2xl peer-placeholder-shown:top-3 peer-placeholder-shown:left-3 peer-focus:text-xl peer-focus:text-black peer-focus:-top-7 peer-focus:left-0 transition-all" for="password">Password</label>
             </div>
 

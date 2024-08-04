@@ -16,13 +16,13 @@ toast
         </div>
         <div class="w-full h-full flex items-center justify-center">
             <div class="w-fit h-fit flex items-center justify-center gap-x-10">
-                <div class="flex flex-col items-center h-fit gap-y-2">
-                    <h1 class="text-6xl bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 bg-clip-text text-transparent mb-5">To-do List App</h1>
-                    <span class="mr-auto text-2xl">An app to manage your to-do's</span>
-                    <span class="mr-auto text-2xl mb-10">Login to get started</span>
+                <div class="flex flex-col items-center h-fit gap-y-2 z-10">
+                    <h1 class="text-6xl bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 bg-clip-text text-transparent mb-5 min-w-max max-sm:text-4xl">To-do List App</h1>
+                    <span class="mr-auto text-2xl max-sm:text-xl">An app to manage your to-do's</span>
+                    <span class="mr-auto text-2xl mb-10 max-sm:text-xl">Login to get started</span>
                     <RouterLink to="/auth" class="text-indigo-700 text-2xl border border-indigo-700 py-3 px-32 rounded hover:bg-indigo-700 hover:text-white mr-auto transition-all duration-300">Start &rarr;</RouterLink>
                 </div>
-                <Welcome class="scale-75" />
+                <Welcome class="scale-75 max-xl:absolute max-xl:blur-lg max-sm:w-96" />
             </div>
         </div>
         <div class="absolute left-0 bottom-0 w-full overflow-hidden leading-[0px] rotate-180">
