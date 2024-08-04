@@ -1,0 +1,1 @@
+import{W as i,r as t}from"./index-CTydEL2q.js";const u=i("rightBarStore",()=>{const e=t(!1),r=t(!1);function a(){e.value=!e.value}function n(){e.value=!0}function o(){e.value=!1}return{rightBarOpen:e,editing:r,toggleRightBar:a,openRightBar:n,closeRightBar:o}});export{u};
