@@ -112,10 +112,10 @@
                     </div>
                     <button @click="toggleRightBar" :key="'newTodo'" class="max-w-96 w-full h-14 mt-1 bg-indigo-700 rounded-lg shadow-md text-white text-3xl hover:bg-indigo-500 focus:bg-indigo-500 active:bg-indigo-600 max-sm:min-w-fit transition-all">+</button>
                 </TransitionGroup>
-                <TransitionGroup tag="ul" name="fade" class="flex flex-col gap-y-1 relative list-none w-96 max-sm:max-w-96 max-sm:w-auto">
+                <TransitionGroup tag="ul" name="fade" class="flex flex-col gap-y-1 relative list-none w-96 max-sm:w-full">
                     <span :key="'loading'" v-if="todosStore.loading">Checking for to-do's...</span>
                     <span class="text-4xl mb-5 dark:text-white" :key="'filter'" v-else>{{ todosStore.listFilter ? todosStore.listFilter : capFilter }}</span>
-                    <li v-for="todo in todos" :key="todo.id" @click="$emit('editTodo', todo)" :style="getTodoStyle(todo)" class="group flex flex-col w-96 max-sm:max-w-96 max-sm:w-auto py-3 px-5 rounded-lg shadow-lg transition-all cursor-pointer">
+                    <li v-for="todo in todos" :key="todo.id" @click="$emit('editTodo', todo)" :style="getTodoStyle(todo)" class="group flex flex-col w-full min-w-fit py-3 px-5 rounded-lg shadow-lg transition-all cursor-pointer">
                         <div class="flex items-center">
                             <input :disabled="isBeforeToday(todo.date)" @click.stop="toggleTodo(todo.id)" type="checkbox" :checked="todo.completed" class="cursor-pointer w-4 h-4 border-none text-indigo-600 transition-all">
                             <span style="word-break: break-all;" class="text-white pl-5 break-words">{{ todo.text }}</span>

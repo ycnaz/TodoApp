@@ -27,20 +27,8 @@
             <div class="flex flex-col w-1/2 h-full items-center justify-center relative max-xl:w-full max-sm:px-5">
                 <RouterLink class="absolute top-5 right-5" to="/dashboard">Skip</RouterLink>
                 <div class="flex border border-black rounded-full absolute top-5">
-                    <RouterLink
-                        exact-active-class="active"
-                        class="h-full w-1/2 py-2 px-7 rounded-s-full relative z-10"
-                        :to="{ name: 'login' }"
-                        >
-                        Login
-                    </RouterLink>
-                    <RouterLink
-                        exact-active-class="active"
-                        class="h-full w-1/2 py-2 px-7 rounded-e-full relative z-10"
-                        :to="{ name: 'register' }"
-                        >
-                        Register
-                    </RouterLink>
+                    <RouterLink exact-active-class="active" class="h-full w-1/2 py-2 px-7 rounded-s-full relative z-10" :to="{ name: 'login' }">Login</RouterLink>
+                    <RouterLink exact-active-class="active" class="h-full w-1/2 py-2 px-7 rounded-e-full relative z-10" :to="{ name: 'register' }">Register</RouterLink>
                     <div class="absolute bg-indigo-600 h-full w-[50%] top-0 left-0 transition-all duration-300 ease-in-out" :class="[ isRegisterActive ? 'translate-x-full rounded-e-full' : 'rounded-s-full' ]"></div>
                 </div>
                 <router-view v-slot="{ Component, route }">
